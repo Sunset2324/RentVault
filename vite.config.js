@@ -2,21 +2,23 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import path from 'path'
 
-// Source - https://stackoverflow.com/a/69261966
-// Posted by Haseeb Saeed, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-03-12, License - CC BY-SA 4.0
-
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
-  base: "/Stakepool-Frontend/",
-  plugins: [vue()],
+  plugins: [
+    react(),
+  ],
   resolve: {
     alias: {
-      "~": path.resolve(__dirname, "node_modules"),
-      "@": path.resolve(__dirname, "src"),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    chunkSizeWarningLimit: 1600,
-  },
-});
+  rollupOptions: {
+            output:{
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        return id.toString().split('node_modules/')[1].split('/')[0].toString();
+                    },
+                },
+            },
+        },
+})

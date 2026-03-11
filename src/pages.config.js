@@ -52,7 +52,7 @@ import ProductCatalog from './pages/ProductCatalog';
 import ProductDetail from './pages/ProductDetail';
 import MyRentals from './pages/MyRentals';
 import AdminDashboard from './pages/AdminDashboard';
-import AdminProducts from './pages/AdminRentals.jsx';
+import AdminProducts from './pages/AdminProducts';
 import AdminRentals from './pages/AdminRentals';
 import __Layout from './Layout.jsx';
 

@@ -7,9 +7,10 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import Login from './pages/Login';
 
-const { Pages, Layout, mainPage } = pagesConfig;
-const mainPageKey = mainPage ?? Object.keys(Pages)[0];
-const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
+const { Pages, Layout } = pagesConfig;
+
+// Halaman yang bebas diakses tanpa login
+const PUBLIC_PAGES = ['Home'];
 
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
@@ -39,28 +40,35 @@ const AuthenticatedApp = () => {
       {/* Public route - Login */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected routes */}
+      {/* Home - bebas diakses */}
       <Route path="/" element={
-        <ProtectedRoute>
-          <LayoutWrapper currentPageName={mainPageKey}>
-            <MainPage />
-          </LayoutWrapper>
-        </ProtectedRoute>
+        <LayoutWrapper currentPageName="Home">
+          <Pages.Home />
+        </LayoutWrapper>
+      } />
+      <Route path="/Home" element={
+        <LayoutWrapper currentPageName="Home">
+          <Pages.Home />
+        </LayoutWrapper>
       } />
 
-      {Object.entries(Pages).map(([path, Page]) => (
-        <Route
-          key={path}
-          path={`/${path}`}
-          element={
-            <ProtectedRoute>
-              <LayoutWrapper currentPageName={path}>
-                <Page />
-              </LayoutWrapper>
-            </ProtectedRoute>
-          }
-        />
-      ))}
+      {/* Protected routes - wajib login */}
+      {Object.entries(Pages).map(([path, Page]) => {
+        if (PUBLIC_PAGES.includes(path)) return null;
+        return (
+          <Route
+            key={path}
+            path={`/${path}`}
+            element={
+              <ProtectedRoute>
+                <LayoutWrapper currentPageName={path}>
+                  <Page />
+                </LayoutWrapper>
+              </ProtectedRoute>
+            }
+          />
+        );
+      })}
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

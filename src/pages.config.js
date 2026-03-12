@@ -1,70 +1,31 @@
-/**
- * pages.config.js - Page routing configuration
- * 
- * This file is AUTO-GENERATED. Do not add imports or modify PAGES manually.
- * Pages are auto-registered when you create files in the ./pages/ folder.
- * 
- * THE ONLY EDITABLE VALUE: mainPage
- * This controls which page is the landing page (shown when users visit the app).
- * 
- * Example file structure:
- * 
- *   import HomePage from './pages/HomePage';
- *   import Dashboard from './pages/Dashboard';
- *   import Settings from './pages/Settings';
- *   
- *   export const PAGES = {
- *       "HomePage": HomePage,
- *       "Dashboard": Dashboard,
- *       "Settings": Settings,
- *   }
- *   
- *   export const pagesConfig = {
- *       mainPage: "HomePage",
- *       Pages: PAGES,
- *   };
- * 
- * Example with Layout (wraps all pages):
- *
- *   import Home from './pages/Home';
- *   import Settings from './pages/Settings';
- *   import __Layout from './Layout.jsx';
- *
- *   export const PAGES = {
- *       "Home": Home,
- *       "Settings": Settings,
- *   }
- *
- *   export const pagesConfig = {
- *       mainPage: "Home",
- *       Pages: PAGES,
- *       Layout: __Layout,
- *   };
- *
- * To change the main page from HomePage to Dashboard, use find_replace:
- *   Old: mainPage: "HomePage",
- *   New: mainPage: "Dashboard",
- *
- * The mainPage value must match a key in the PAGES object exactly.
- */
+import { lazy, Suspense } from 'react';
 import Home from './pages/Home';
-import ProductCatalog from './pages/ProductCatalog';
-import ProductDetail from './pages/ProductDetail';
-import MyRentals from './pages/MyRentals';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminProducts from './pages/AdminProducts';
-import AdminRentals from './pages/AdminRentals';
+import LoadingPage from './components/LoadingPage';
 import __Layout from './Layout.jsx';
 
+// Lazy load semua halaman kecuali Home
+const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const MyRentals = lazy(() => import('./pages/MyRentals'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminProducts = lazy(() => import('./pages/AdminProducts'));
+const AdminRentals = lazy(() => import('./pages/AdminRentals'));
+
+// Wrapper untuk Suspense
+const withSuspense = (Component) => (props) => (
+  <Suspense fallback={<LoadingPage />}>
+    <Component {...props} />
+  </Suspense>
+);
 
 export const PAGES = {
     "Home": Home,
-    "ProductCatalog": ProductCatalog,
-    "ProductDetail": ProductDetail,
-    "MyRentals": MyRentals,
-    "AdminDashboard": AdminDashboard,
-    "AdminProducts": AdminProducts,
-    "AdminRentals": AdminRentals,
+    "ProductCatalog": withSuspense(ProductCatalog),
+    "ProductDetail": withSuspense(ProductDetail),
+    "MyRentals": withSuspense(MyRentals),
+    "AdminDashboard": withSuspense(AdminDashboard),
+    "AdminProducts": withSuspense(AdminProducts),
+    "AdminRentals": withSuspense(AdminRentals),
 }
 
 export const pagesConfig = {

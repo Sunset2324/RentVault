@@ -12,19 +12,17 @@ export default defineConfig({
     },
   },
   build: {
-    // Code splitting - pisah vendor chunks
     rollupOptions: {
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['framer-motion', 'lucide-react'],
-          'query-vendor': ['@tanstack/react-query'],
           'supabase-vendor': ['@supabase/supabase-js'],
+          'query-vendor': ['@tanstack/react-query'],
+          'motion-vendor': ['framer-motion'],
           'chart-vendor': ['recharts'],
         },
       },
     },
-    // Minify + compress
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -32,7 +30,6 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
-    // Chunk size warning limit
     chunkSizeWarningLimit: 600,
   },
 })
